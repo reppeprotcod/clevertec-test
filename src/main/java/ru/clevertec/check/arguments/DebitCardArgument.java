@@ -18,4 +18,9 @@ public class DebitCardArgument implements IArgument {
 		context.setCard(card);
 	}
 
+	@Override
+	public int getPriority() {
+		return 3;
+	}
+
 }

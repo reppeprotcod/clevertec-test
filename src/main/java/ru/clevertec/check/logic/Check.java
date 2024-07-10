@@ -22,10 +22,10 @@ public class Check {
 	public Check() {
 		discountCard = new DiscountCardModel();
 		discountCard.setDiscountAmount(0);
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-		
+
 		Date currentDate = new Date();
 		date = dateFormat.format(currentDate);
 		time = timeFormat.format(currentDate);
@@ -56,6 +56,10 @@ public class Check {
 		formatters.add(formatter);
 	}
 	
+	public void removeCheckFormatter(ICheckFormatter formatter) {
+		formatters.remove(formatter);
+	}
+
 	public void calculate() {
 		for (CheckPositionModel position : positions) {
 			ProductModel product = position.getProduct();
@@ -74,7 +78,9 @@ public class Check {
 
 	public void print() {
 		for (ICheckFormatter formatter : formatters) {
-			formatter.print(this);			
+			if (formatter != null) {
+				formatter.print(this);
+			}
 		}
 	}
 
@@ -85,15 +91,15 @@ public class Check {
 	public String getTime() {
 		return time;
 	}
-	
+
 	public double getTotalPrice() {
 		return totalPrice;
 	}
-	
+
 	public double getTotalDiscount() {
 		return totalDiscount;
 	}
-	
+
 	public double getTotalWithDiscount() {
 		return totalWithDiscount;
 	}

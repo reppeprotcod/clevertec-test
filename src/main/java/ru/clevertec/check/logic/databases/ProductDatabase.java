@@ -1,6 +1,5 @@
 package main.java.ru.clevertec.check.logic.databases;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import main.java.ru.clevertec.check.logic.interfaces.IDatabase;
@@ -29,7 +28,8 @@ public class ProductDatabase implements IDatabase {
 	}
 
 	@Override
-	public void read() throws IOException {
+	public void read() throws Exception {
+		items.clear();
 		String[] row;
 		while((row = reader.nextRow()) != null) {
 			ProductModel item = new ProductModel();

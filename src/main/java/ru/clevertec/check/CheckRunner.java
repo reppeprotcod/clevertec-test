@@ -16,38 +16,42 @@ public class CheckRunner {
 
 	public static void main(String[] args) {
 		Check check = new Check();
-		CSVCheckFormatter formatter1 = new CSVCheckFormatter("result.csv");
-		ConsoleCheckFormatter formatter2 = new ConsoleCheckFormatter();
-		check.addCheckFormatter(formatter1);
-		check.addCheckFormatter(formatter2);
+		ConsoleCheckFormatter formatter = new ConsoleCheckFormatter();
+		check.addCheckFormatter(formatter);
 
 		CheckContext context = new CheckContext();
 		DbFactory dbFactory = new DbFactory();
+		Exception databaseException = null;
 		try {
 			context.setDiscountDb((DiscountDatabase) dbFactory.create("discount"));
 			context.setProductDb((ProductDatabase) dbFactory.create("products"));
 		} catch (Exception e) {
-			formatter1.printError(e);
-			formatter2.printError(e);
-			System.exit(1);
+			databaseException = e;
 		}
 		context.setCheck(check);
+		context.setFormatter(new CSVCheckFormatter("result.csv"));
 
 		ArgumentFactory argFactory = new ArgumentFactory();
 		ArrayList<IArgument> arguments = new ArrayList<IArgument>();
+		Exception argumentsException = null;
 		try {
 			for (String arg : args) {
 				arguments.add(argFactory.create(arg));
 			}
 		} catch (Exception e) {
-			formatter1.printError(e);
-			formatter2.printError(e);
-			System.exit(1);
+			argumentsException = e;
 		}
+		arguments.sort((a1, a2) -> a1.getPriority() - a2.getPriority());
 
 		try {
 			for (IArgument arg : arguments) {
 				arg.apply(context);
+			}
+			if (argumentsException != null) {
+				throw argumentsException;
+			}
+			if (databaseException != null) {
+				throw databaseException;
 			}
 			if(check.getPositions().length == 0) {
 				throw new Exception("BAD REQUEST");
@@ -61,8 +65,8 @@ public class CheckRunner {
 			}
 			check.print();
 		} catch (Exception e) {
-			formatter1.printError(e);
-			formatter2.printError(e);
+			formatter.printError(e);
+			context.getFormatter().printError(e);
 		}
 	}
 

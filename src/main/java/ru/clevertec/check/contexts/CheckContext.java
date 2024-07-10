@@ -1,5 +1,6 @@
 package main.java.ru.clevertec.check.contexts;
 
+import main.java.ru.clevertec.check.interfaces.ICheckFormatter;
 import main.java.ru.clevertec.check.logic.Check;
 import main.java.ru.clevertec.check.logic.databases.DiscountDatabase;
 import main.java.ru.clevertec.check.logic.databases.ProductDatabase;
@@ -10,6 +11,7 @@ public class CheckContext {
 	private DebitCardModel card;
 	private DiscountDatabase discountDb;
 	private ProductDatabase productDb;
+	private ICheckFormatter formatter;
 	
 	public Check getCheck() {
 		return check;
@@ -41,5 +43,17 @@ public class CheckContext {
 
 	public void setProductDb(ProductDatabase productDb) {
 		this.productDb = productDb;
+	}
+
+	public ICheckFormatter getFormatter() {
+		return formatter;
+	}
+
+	public void setFormatter(ICheckFormatter formatter) {
+		if (this.formatter != null) {
+			check.removeCheckFormatter(this.formatter);
+		}
+		this.formatter = formatter;
+		check.addCheckFormatter(formatter);
 	}
 }

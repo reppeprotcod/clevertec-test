@@ -33,4 +33,9 @@ public class DiscountCardArgument implements IArgument {
 		}
 	}
 
+	@Override
+	public int getPriority() {
+		return 4;
+	}
+
 }

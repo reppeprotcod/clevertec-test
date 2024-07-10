@@ -53,4 +53,9 @@ public class AddProductArgument implements IArgument {
 		}
 	}
 
+	@Override
+	public int getPriority() {
+		return 2;
+	}
+
 }
